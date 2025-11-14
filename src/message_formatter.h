@@ -25,7 +25,7 @@ class MessageFormatter : public RefCounted {
 
         static MessageFormatter* from_builder(MessageFormatterBuilder* builder);
 
-        String format_to_string();
+        PackedByteArray format_to_string(Dictionary args);
 
 };
 

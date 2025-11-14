@@ -89,12 +89,55 @@ MessageFormatter* MessageFormatter::from_builder(MessageFormatterBuilder* builde
 }
 
 void MessageFormatter::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("format_to_string"), &MessageFormatter::format_to_string);
+    ClassDB::bind_method(D_METHOD("format_to_string"), &MessageFormatter::format_to_string, "args_map");
 }
 
-String MessageFormatter::format_to_string() {
+PackedByteArray MessageFormatter::format_to_string(Dictionary args) {
     if (inner == nullptr) {
-        print_error("MessageFormatter ");
+        print_error("MessageFormatter needs to be created with MessageFormatterBuilder.");
+        return PackedByteArray();
     }
-    return "";
+
+    std::map<icu::UnicodeString, icu::message2::Formattable> arg_map{};
+
+    Array keys = args.keys();
+    Array values = args.values();
+    for (int64_t i = 0; i < keys.size(); i++) {
+        if (keys[i].get_type() == Variant::Type::STRING) {
+            String key = keys[i];
+            icu::message2::Formattable formatVariant;
+            switch (keys[i].get_type()) {
+                case Variant::Type::INT:
+                    formatVariant = icu::message2::Formattable((int64_t)keys[i]);
+                    break;
+                default:
+                    break;
+            }
+
+            icu::UnicodeString key_u = icu::UnicodeString::fromUTF8(icu::StringPiece((const char*)key.ptr(), key.length()));
+            arg_map[key_u] = formatVariant;
+        }
+    }
+
+    UErrorCode error_code = U_ZERO_ERROR;
+    icu::message2::MessageArguments m_args = icu::message2::MessageArguments(arg_map, error_code);
+    if (error_code != U_ZERO_ERROR) {
+        print_error(vformat("Could not create argument dictionary: %d", error_code));
+        return PackedByteArray();
+    }
+
+    icu::UnicodeString str = inner->formatToString(m_args, error_code);
+
+    if (error_code != U_ZERO_ERROR) {
+        print_error(vformat("Could not format string: %d", error_code));
+        return PackedByteArray();
+    }
+
+    PackedByteArray out;
+    out.resize(str.length());
+    // Not any other super easy ways to handle this that I can think of.
+    for (int32_t i = 0; i < str.length(); i++) {
+        out.insert(i, str.charAt(i));
+    }
+    return out;
 }
