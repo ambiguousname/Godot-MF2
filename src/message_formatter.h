@@ -18,9 +18,16 @@ class MessageFormatterBuilder : public RefCounted {
         UErrorCode error = U_ZERO_ERROR;
         icu::message2::MessageFormatter::Builder inner;
 
+        PackedByteArray pattern;
+
     public:
         MessageFormatterBuilder();
         ~MessageFormatterBuilder() override = default;
+
+        void set_pattern(const PackedByteArray pattern);
+        PackedByteArray get_pattern() const;
+        // TODO: Replace with actual Locale wrapper.
+        // void setLocale(const String language);
 };
 
 class MessageFormatter : public RefCounted {
