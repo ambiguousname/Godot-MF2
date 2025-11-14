@@ -10,15 +10,22 @@
 
 using namespace godot;
 
+class MessageFormatterBuilder;
 
 class MessageFormatter : public RefCounted {
     GDCLASS(MessageFormatter, RefCounted)
 
     protected:
         static void _bind_methods();
+
+        std::unique_ptr<icu::message2::MessageFormatter> inner = nullptr;
     public:
-        MessageFormatter() = default;
+        MessageFormatter() = default; 
         ~MessageFormatter() override = default;
+
+        static MessageFormatter* from_builder(MessageFormatterBuilder* builder);
+
+        String format_to_string();
 
 };
 
@@ -33,6 +40,7 @@ class MessageFormatterBuilder : public RefCounted {
         PackedByteArray pattern;
 
     public:
+        friend class MessageFormatter;
         MessageFormatterBuilder();
         ~MessageFormatterBuilder() override = default;
 

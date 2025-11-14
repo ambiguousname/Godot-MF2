@@ -67,16 +67,34 @@ MessageFormatterBuilder::MessageFormatterBuilder() : inner(error) {
 }
 
 MessageFormatter* MessageFormatterBuilder::build() {
+    return MessageFormatter::from_builder(this);
+}
+
+MessageFormatter* MessageFormatter::from_builder(MessageFormatterBuilder* builder) {
     UErrorCode error_code = U_ZERO_ERROR;
-    inner.build(error_code);
+    icu::message2::MessageFormatter formatter = builder->inner.build(error_code);
     if (error_code != U_ZERO_ERROR) {
         print_error(vformat("Error building MessageFormatter - %d", error_code));
         return nullptr;
+
     }
 
-    return memnew(MessageFormatter);
+    // Stupid hack to allocate our MessageFormatter (since my compiler is complaining about the move assignment being a copy assignment?):
+    icu::message2::MessageFormatter* formatter_ptr = (icu::message2::MessageFormatter*) malloc(sizeof(icu::message2::MessageFormatter));
+    *formatter_ptr = std::move(formatter);
+
+    MessageFormatter* f = memnew(MessageFormatter);
+    f->inner = std::unique_ptr<icu::message2::MessageFormatter>(formatter_ptr);
+    return f;
 }
 
 void MessageFormatter::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("format_to_string"), &MessageFormatter::format_to_string);
+}
 
+String MessageFormatter::format_to_string() {
+    if (inner == nullptr) {
+        print_error("MessageFormatter ");
+    }
+    return "";
 }
