@@ -16,5 +16,5 @@ public:
 	ExampleClass() = default;
 	~ExampleClass() override = default;
 
-	void print_type(const Variant &p_variant) const;
+	void print_type(const godot::Variant &p_variant) const;
 };

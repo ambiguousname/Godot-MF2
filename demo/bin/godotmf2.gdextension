@@ -54,3 +54,6 @@ web.wasm32.single.debug = "./web/libgodotmf2.web.template_debug.wasm32.nothreads
 web.wasm32.double.debug = "./web/libgodotmf2.web.template_release.wasm32.double.nothreads.wasm"
 web.wasm32.single.release = "./web/libgodotmf2.web.template_release.wasm32.nothreads.wasm"
 web.wasm32.double.release = "./web/libgodotmf2.web.template_release.wasm32.double.nothreads.wasm"
+
+[dependencies]
+macos = ["res://bin/macos/libicuuc.dylib", "res://bin/macos/libicui18n.dylib", "res://bin/macos/libicudata.dylib", "res://bin/macos/libicuio.dylib"]

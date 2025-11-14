@@ -37,7 +37,9 @@ Run the following command to download godot-cpp:
 
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
-env.Append(CPPPATH=["src/"])
+icu_dir = ARGUMENTS.get('icu_dir', '.')
+
+env.Append(CPPPATH=["src/", f"{icu_dir}/include"])
 sources = Glob("src/*.cpp")
 
 if env["target"] in ["editor", "template_debug"]:
@@ -56,6 +58,9 @@ lib_filename = "{}{}{}{}".format(env.subst('$SHLIBPREFIX'), libname, suffix, env
 library = env.SharedLibrary(
     "bin/{}/{}".format(env['platform'], lib_filename),
     source=sources,
+    LIBS=[env['LIBS'], 'icui18n'],
+    # TODO: Platform-specific.
+    LIBPATH=[f"{icu_dir}/lib"]
 )
 
 copy = env.Install("{}/bin/{}/".format(projectdir, env["platform"]), library)
