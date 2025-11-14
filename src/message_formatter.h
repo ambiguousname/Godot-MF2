@@ -18,10 +18,12 @@ class MessageFormatter : public RefCounted {
     protected:
         static void _bind_methods();
 
-        std::unique_ptr<icu::message2::MessageFormatter> inner = nullptr;
+        icu::message2::MessageFormatter* inner = nullptr;
     public:
         MessageFormatter() = default; 
-        ~MessageFormatter() override = default;
+        ~MessageFormatter() override {
+            ::free(inner);
+        }
 
         static MessageFormatter* from_builder(MessageFormatterBuilder* builder);
 

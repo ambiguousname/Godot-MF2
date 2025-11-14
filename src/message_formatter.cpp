@@ -76,15 +76,13 @@ MessageFormatter* MessageFormatter::from_builder(MessageFormatterBuilder* builde
     if (error_code != U_ZERO_ERROR) {
         print_error(vformat("Error building MessageFormatter - %d", error_code));
         return nullptr;
-
     }
-
     // Stupid hack to allocate our MessageFormatter (since my compiler is complaining about the move assignment being a copy assignment?):
-    icu::message2::MessageFormatter* formatter_ptr = (icu::message2::MessageFormatter*) malloc(sizeof(icu::message2::MessageFormatter));
-    *formatter_ptr = std::move(formatter);
+    icu::message2::MessageFormatter* formatter_ptr_v = (icu::message2::MessageFormatter*) malloc(sizeof(icu::message2::MessageFormatter));
+    *formatter_ptr_v = std::move(formatter);
 
     MessageFormatter* f = memnew(MessageFormatter);
-    f->inner = std::unique_ptr<icu::message2::MessageFormatter>(formatter_ptr);
+    f->inner = formatter_ptr_v;
     return f;
 }
 
@@ -106,15 +104,15 @@ PackedByteArray MessageFormatter::format_to_string(Dictionary args) {
         if (keys[i].get_type() == Variant::Type::STRING) {
             String key = keys[i];
             icu::message2::Formattable formatVariant;
-            switch (keys[i].get_type()) {
+            switch (values[i].get_type()) {
                 case Variant::Type::INT:
-                    formatVariant = icu::message2::Formattable((int64_t)keys[i]);
+                    formatVariant = icu::message2::Formattable((int64_t)values[i]);
                     break;
                 default:
                     break;
             }
 
-            icu::UnicodeString key_u = icu::UnicodeString::fromUTF8(icu::StringPiece((const char*)key.ptr(), key.length()));
+            icu::UnicodeString key_u = icu::UnicodeString::fromUTF32((const UChar32*)key.ptr(), key.length());
             arg_map[key_u] = formatVariant;
         }
     }
@@ -137,7 +135,7 @@ PackedByteArray MessageFormatter::format_to_string(Dictionary args) {
     out.resize(str.length());
     // Not any other super easy ways to handle this that I can think of.
     for (int32_t i = 0; i < str.length(); i++) {
-        out.insert(i, str.charAt(i));
+        out[i] = str.charAt(i);
     }
     return out;
 }
