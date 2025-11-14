@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="MessageFormatterBuilder" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+		Builder for the [MessageFormatter] class.
+	</brief_description>
+	<description>
+		Set the individual properties for a given MessageFormatter, before calling [method build].
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+	</methods>
+	<members>
+		<member name="pattern" type="PackedByteArray" setter="set_pattern" getter="get_pattern" default="PackedByteArray()">
+			UTF-8 array of the Message Format 2 pattern to use.
+		</member>
+	</members>
+</class>
