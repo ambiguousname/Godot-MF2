@@ -55,12 +55,12 @@ suffix = env['suffix'].replace(".dev", "").replace(".universal", "")
 
 lib_filename = "{}{}{}{}".format(env.subst('$SHLIBPREFIX'), libname, suffix, env.subst('$SHLIBSUFFIX'))
 
+# TODO: Platform-specific LIBPATH
+env.AppendUnique(LIBS=['icui18n'], LIBPATH=[f"{icu_dir}/lib"])
+
 library = env.SharedLibrary(
     "bin/{}/{}".format(env['platform'], lib_filename),
     source=sources,
-    LIBS=[env['LIBS'], 'icui18n'],
-    # TODO: Platform-specific.
-    LIBPATH=[f"{icu_dir}/lib"]
 )
 
 copy = env.Install("{}/bin/{}/".format(projectdir, env["platform"]), library)
