@@ -10,6 +10,18 @@
 
 using namespace godot;
 
+
+class MessageFormatter : public RefCounted {
+    GDCLASS(MessageFormatter, RefCounted)
+
+    protected:
+        static void _bind_methods();
+    public:
+        MessageFormatter() = default;
+        ~MessageFormatter() override = default;
+
+};
+
 class MessageFormatterBuilder : public RefCounted {
     GDCLASS(MessageFormatterBuilder, RefCounted)
 
@@ -26,17 +38,8 @@ class MessageFormatterBuilder : public RefCounted {
 
         void set_pattern(const PackedByteArray pattern);
         PackedByteArray get_pattern() const;
+
+        MessageFormatter* build();
         // TODO: Replace with actual Locale wrapper.
         // void setLocale(const String language);
-};
-
-class MessageFormatter : public RefCounted {
-    GDCLASS(MessageFormatter, RefCounted)
-
-    protected:
-        static void _bind_methods();
-    public:
-        MessageFormatter() = default;
-        ~MessageFormatter() override = default;
-
 };

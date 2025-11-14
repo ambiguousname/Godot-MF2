@@ -36,6 +36,7 @@ const char* getError(UErrorCode error) {
 void MessageFormatterBuilder::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_pattern"), &MessageFormatterBuilder::set_pattern);
     ClassDB::bind_method(D_METHOD("get_pattern"), &MessageFormatterBuilder::get_pattern);
+    ClassDB::bind_method(D_METHOD("build"), &MessageFormatterBuilder::build);
 
     ADD_PROPERTY(PropertyInfo(godot::Variant::PACKED_BYTE_ARRAY, "pattern"), "set_pattern", "get_pattern");
 }
@@ -63,6 +64,17 @@ MessageFormatterBuilder::MessageFormatterBuilder() : inner(error) {
     if (error != U_ZERO_ERROR) {
         print_error(vformat("Error creating MessageFormatter::Builder - %s (%i)", getError(error), error));
     }
+}
+
+MessageFormatter* MessageFormatterBuilder::build() {
+    UErrorCode error_code = U_ZERO_ERROR;
+    inner.build(error_code);
+    if (error_code != U_ZERO_ERROR) {
+        print_error(vformat("Error building MessageFormatter - %d", error_code));
+        return nullptr;
+    }
+
+    return memnew(MessageFormatter);
 }
 
 void MessageFormatter::_bind_methods() {
