@@ -1,2 +1,2 @@
 keys,en,es,ja
-LOCALIZATION_TEST,"Hello, {$name}!","¡Hola, {$name}!",こんにちは ${name}
+LOCALIZATION_TEST,"Hello, {$name}!","¡Hola, {$name}!",{$name} こんにちは

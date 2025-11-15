@@ -167,10 +167,10 @@ icu::message2::Formattable variant_to_formattable(Variant value) {
 	}
 }
 
-PackedByteArray MessageFormatter::format_to_string(Dictionary args) {
+String MessageFormatter::format_to_string(Dictionary args) {
 	if (inner == nullptr) {
 		print_error("MessageFormatter needs to be created with MessageFormatterBuilder.");
-		return PackedByteArray();
+		return String();
 	}
 
 	std::map<icu::UnicodeString, icu::message2::Formattable> arg_map{};
@@ -190,21 +190,17 @@ PackedByteArray MessageFormatter::format_to_string(Dictionary args) {
 	icu::message2::MessageArguments m_args = icu::message2::MessageArguments(arg_map, error_code);
 	if (error_code > U_ZERO_ERROR) {
 		print_error(vformat("Could not create argument dictionary: %s", getError(error_code)));
-		return PackedByteArray();
+		return String();
 	}
 
 	icu::UnicodeString str = inner->formatToString(m_args, error_code);
 
 	if (error_code > U_ZERO_ERROR) {
 		print_error(vformat("Could not format string: %s", getError(error_code)));
-		return PackedByteArray();
+		return String();
 	}
 
-	PackedByteArray out;
-	out.resize(str.length());
-	// Not any other super easy ways to handle this that I can think of.
-	for (int32_t i = 0; i < str.length(); i++) {
-		out[i] = str.charAt(i);
-	}
+	String out;
+	out.parse_utf16(str.getBuffer(), str.length());
 	return out;
 }

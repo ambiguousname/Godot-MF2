@@ -10,4 +10,4 @@ func _ready() -> void:
 	var res = formatter.format_to_string({
 		"name": "Username",
 	});
-	print(res.get_string_from_utf8());
+	print(res);
