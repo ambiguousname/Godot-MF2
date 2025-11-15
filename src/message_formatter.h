@@ -13,43 +13,43 @@ using namespace godot;
 class MessageFormatterBuilder;
 
 class MessageFormatter : public RefCounted {
-    GDCLASS(MessageFormatter, RefCounted)
+	GDCLASS(MessageFormatter, RefCounted)
 
-    protected:
-        static void _bind_methods();
+	protected:
+		static void _bind_methods();
 
-        icu::message2::MessageFormatter* inner = nullptr;
-    public:
-        MessageFormatter() = default; 
-        ~MessageFormatter() override {
-            ::free(inner);
-        }
+		icu::message2::MessageFormatter* inner = nullptr;
+	public:
+		MessageFormatter() = default; 
+		~MessageFormatter() override {
+			::free(inner);
+		}
 
-        static MessageFormatter* from_builder(MessageFormatterBuilder* builder);
+		static MessageFormatter* from_builder(MessageFormatterBuilder* builder);
 
-        PackedByteArray format_to_string(Dictionary args);
+		PackedByteArray format_to_string(Dictionary args);
 
 };
 
 class MessageFormatterBuilder : public RefCounted {
-    GDCLASS(MessageFormatterBuilder, RefCounted)
+	GDCLASS(MessageFormatterBuilder, RefCounted)
 
-    protected:
-        static void _bind_methods();
-        UErrorCode error = U_ZERO_ERROR;
-        icu::message2::MessageFormatter::Builder inner;
+	protected:
+		static void _bind_methods();
+		UErrorCode error = U_ZERO_ERROR;
+		icu::message2::MessageFormatter::Builder inner;
 
-        PackedByteArray pattern;
+		PackedByteArray pattern;
 
-    public:
-        friend class MessageFormatter;
-        MessageFormatterBuilder();
-        ~MessageFormatterBuilder() override = default;
+	public:
+		friend class MessageFormatter;
+		MessageFormatterBuilder();
+		~MessageFormatterBuilder() override = default;
 
-        void set_pattern(const PackedByteArray pattern);
-        PackedByteArray get_pattern() const;
+		void set_pattern(const PackedByteArray pattern);
+		PackedByteArray get_pattern() const;
 
-        MessageFormatter* build();
-        // TODO: Replace with actual Locale wrapper.
-        // void setLocale(const String language);
+		MessageFormatter* build();
+		// TODO: Replace with actual Locale wrapper.
+		// void setLocale(const String language);
 };
