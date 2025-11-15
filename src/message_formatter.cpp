@@ -95,7 +95,7 @@ void MessageFormatterBuilder::set_pattern(const PackedByteArray byte_pattern) {
 	UErrorCode error_code = U_ZERO_ERROR;
 	inner.setPattern(unicode_str, parse_error, error_code);
 
-	if (error_code != U_ZERO_ERROR) {
+	if (error_code > U_ZERO_ERROR) {
 		// String pre_context = String(parse_error.preContext);
 		// String post_context = String(parse_error.postContext);
 		print_error(vformat("Could not parse: \n%s\nAt line %d, offset %d: %s", byte_pattern.get_string_from_utf8(), parse_error.line, parse_error.offset, getError(error_code)));
@@ -103,7 +103,7 @@ void MessageFormatterBuilder::set_pattern(const PackedByteArray byte_pattern) {
 }
 
 MessageFormatterBuilder::MessageFormatterBuilder() : inner(error) {
-	if (error != U_ZERO_ERROR) {
+	if (error > U_ZERO_ERROR) {
 		print_error(vformat("Error creating MessageFormatter::Builder - %s", getError(error)));
 	}
 }
@@ -115,7 +115,7 @@ MessageFormatter* MessageFormatterBuilder::build() {
 MessageFormatter* MessageFormatter::from_builder(MessageFormatterBuilder* builder) {
 	UErrorCode error_code = U_ZERO_ERROR;
 	icu::message2::MessageFormatter formatter = builder->inner.build(error_code);
-	if (error_code != U_ZERO_ERROR) {
+	if (error_code > U_ZERO_ERROR) {
 		print_error(vformat("Error building MessageFormatter - %d", error_code));
 		return nullptr;
 	}
@@ -188,14 +188,14 @@ PackedByteArray MessageFormatter::format_to_string(Dictionary args) {
 
 	UErrorCode error_code = U_ZERO_ERROR;
 	icu::message2::MessageArguments m_args = icu::message2::MessageArguments(arg_map, error_code);
-	if (error_code != U_ZERO_ERROR) {
+	if (error_code > U_ZERO_ERROR) {
 		print_error(vformat("Could not create argument dictionary: %s", getError(error_code)));
 		return PackedByteArray();
 	}
 
 	icu::UnicodeString str = inner->formatToString(m_args, error_code);
 
-	if (error_code != U_ZERO_ERROR) {
+	if (error_code > U_ZERO_ERROR) {
 		print_error(vformat("Could not format string: %s", getError(error_code)));
 		return PackedByteArray();
 	}
