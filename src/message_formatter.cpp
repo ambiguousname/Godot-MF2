@@ -45,6 +45,8 @@ PackedByteArray MessageFormatterBuilder::get_pattern() const {
     return pattern;
 }
 
+#define STRING_TO_UNICODE(string) icu::UnicodeString::fromUTF32((const UChar32*) string.ptr(), string.length())
+
 void MessageFormatterBuilder::set_pattern(const PackedByteArray byte_pattern) {
     pattern = byte_pattern;
     icu::UnicodeString unicode_str = icu::UnicodeString::fromUTF8(icu::StringPiece((const char*)byte_pattern.ptr(), byte_pattern.size()));
@@ -90,6 +92,41 @@ void MessageFormatter::_bind_methods() {
     ClassDB::bind_method(D_METHOD("format_to_string"), &MessageFormatter::format_to_string, "args_map");
 }
 
+icu::message2::Formattable variant_to_formattable(Variant value) {
+    switch (value.get_type()) {
+        case Variant::Type::INT: {
+            return icu::message2::Formattable((int64_t)value);
+        }
+        case Variant::Type::STRING: {
+            String str_v = value;
+            return icu::message2::Formattable(STRING_TO_UNICODE(str_v));
+        }
+        case Variant::Type::FLOAT: {
+            return icu::message2::Formattable((double)value);
+        }
+        // case Variant::Type::ARRAY: {
+        //     Array values = value;
+        //     if (values.size() > std::numeric_limits<int32_t>::max) {
+        //         print_error(vformat("Array is of size %d, which exceeds int32_t's maximum size (icu's Formattable type can only be indexed up to %d)", values.size(), std::numeric_limits<int32_t>::max));
+        //         return icu::message2::Formattable();
+        //     }
+        //     icu::message2::Formattable* formatArr = new icu::message2::Formattable[values.size()];
+        //     for (int64_t i = 0; i < values.size(); i++) {
+        //         Variant v = values[i];
+        //         formatArr[i] = variant_to_formattable(v);
+        //     }
+
+        //     icu::message2::Formattable arr(formatArr, values.size());
+        //     // TODO: This does not work since Formattable does not copy over the array.
+        //     delete formatArr;
+        //     return arr;
+        // }
+        default: {
+            return icu::message2::Formattable();
+        }
+    }
+}
+
 PackedByteArray MessageFormatter::format_to_string(Dictionary args) {
     if (inner == nullptr) {
         print_error("MessageFormatter needs to be created with MessageFormatterBuilder.");
@@ -103,16 +140,8 @@ PackedByteArray MessageFormatter::format_to_string(Dictionary args) {
     for (int64_t i = 0; i < keys.size(); i++) {
         if (keys[i].get_type() == Variant::Type::STRING) {
             String key = keys[i];
-            icu::message2::Formattable formatVariant;
-            switch (values[i].get_type()) {
-                case Variant::Type::INT:
-                    formatVariant = icu::message2::Formattable((int64_t)values[i]);
-                    break;
-                default:
-                    break;
-            }
-
-            icu::UnicodeString key_u = icu::UnicodeString::fromUTF32((const UChar32*)key.ptr(), key.length());
+            icu::message2::Formattable formatVariant = variant_to_formattable(values[i]);
+            icu::UnicodeString key_u = STRING_TO_UNICODE(key);
             arg_map[key_u] = formatVariant;
         }
     }
