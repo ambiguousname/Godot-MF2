@@ -39,15 +39,15 @@ class MessageFormatterBuilder : public RefCounted {
 		UErrorCode error = U_ZERO_ERROR;
 		icu::message2::MessageFormatter::Builder inner;
 
-		PackedByteArray pattern;
+		String pattern;
 
 	public:
 		friend class MessageFormatter;
 		MessageFormatterBuilder();
 		~MessageFormatterBuilder() override = default;
 
-		void set_pattern(const PackedByteArray pattern);
-		PackedByteArray get_pattern() const;
+		void set_pattern(const String pattern);
+		String get_pattern() const;
 
 		MessageFormatter* build();
 		// TODO: Replace with actual Locale wrapper.

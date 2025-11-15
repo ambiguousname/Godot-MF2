@@ -81,15 +81,15 @@ void MessageFormatterBuilder::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(godot::Variant::PACKED_BYTE_ARRAY, "pattern"), "set_pattern", "get_pattern");
 }
 
-PackedByteArray MessageFormatterBuilder::get_pattern() const {
+String MessageFormatterBuilder::get_pattern() const {
 	return pattern;
 }
 
 #define STRING_TO_UNICODE(string) icu::UnicodeString::fromUTF32((const UChar32*) string.ptr(), string.length())
 
-void MessageFormatterBuilder::set_pattern(const PackedByteArray byte_pattern) {
-	pattern = byte_pattern;
-	icu::UnicodeString unicode_str = icu::UnicodeString::fromUTF8(icu::StringPiece((const char*)byte_pattern.ptr(), byte_pattern.size()));
+void MessageFormatterBuilder::set_pattern(const String string_pattern) {
+	pattern = string_pattern;
+	icu::UnicodeString unicode_str = STRING_TO_UNICODE(pattern);
 
 	UParseError parse_error;
 	UErrorCode error_code = U_ZERO_ERROR;
@@ -98,7 +98,7 @@ void MessageFormatterBuilder::set_pattern(const PackedByteArray byte_pattern) {
 	if (error_code > U_ZERO_ERROR) {
 		// String pre_context = String(parse_error.preContext);
 		// String post_context = String(parse_error.postContext);
-		print_error(vformat("Could not parse: \n%s\nAt line %d, offset %d: %s", byte_pattern.get_string_from_utf8(), parse_error.line, parse_error.offset, getError(error_code)));
+		print_error(vformat("Could not parse: \n%s\nAt line %d, offset %d: %s", string_pattern, parse_error.line, parse_error.offset, getError(error_code)));
 	}
 }
 
