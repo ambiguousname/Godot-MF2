@@ -1,36 +1,64 @@
 #include "message_formatter.h"
 
-const char* getError(UErrorCode error) {
+String getError(UErrorCode error) {
+    const char* error_explainer;
     switch(error) {
-        case U_ZERO_ERROR:
-            return "No error.";
-        case U_ILLEGAL_ARGUMENT_ERROR:
-            return "Illegal argument.";
-        case U_MISSING_RESOURCE_ERROR:
-            return "The requested resource cannot be found.";
-        case U_FILE_ACCESS_ERROR:
-            return "The requested file cannot be found.";
-        case U_INTERNAL_PROGRAM_ERROR:
-            return "The ICU4C library has failed in some way.";
-        case U_MESSAGE_PARSE_ERROR:
-            return "Cannot parse message.";
-        case U_MEMORY_ALLOCATION_ERROR:
-            return "Could not allocate memory.";
-        case U_INDEX_OUTOFBOUNDS_ERROR:
-            return "Trying to access index out of bounds.";
-        case U_PARSE_ERROR:
-            return "Unexpected error while parsing.";
-        case U_INVALID_CHAR_FOUND:
-            return "Invalid character found.";
-        case U_TRUNCATED_CHAR_FOUND:
-            return "Incomplete input sequence.";
-        case U_INVALID_TABLE_FORMAT:
-            return "Conversion table file found, but is corrupted.";
+        case U_ZERO_ERROR: {
+            error_explainer = "No error.";
+            break;
+        }
+        case U_ILLEGAL_ARGUMENT_ERROR: {
+            error_explainer = "Illegal argument."; 
+            break;
+        }
+        case U_MISSING_RESOURCE_ERROR: {
+            error_explainer = "The requested resource cannot be found."; 
+            break;
+        }
+        case U_FILE_ACCESS_ERROR: {
+            error_explainer = "The requested file cannot be found."; 
+            break;
+        }
+        case U_INTERNAL_PROGRAM_ERROR: {
+            error_explainer = "The ICU4C library has failed in some way."; 
+            break;
+        }
+        case U_MESSAGE_PARSE_ERROR: {
+            error_explainer = "Cannot parse message."; 
+            break;
+        }
+        case U_MEMORY_ALLOCATION_ERROR: {
+            error_explainer = "Could not allocate memory."; 
+            break;
+        }
+        case U_INDEX_OUTOFBOUNDS_ERROR: {
+            error_explainer = "Trying to access index out of bounds."; 
+            break;
+        }
+        case U_PARSE_ERROR: {
+            error_explainer = "Unexpected error while parsing."; 
+            break;
+        }
+        case U_INVALID_CHAR_FOUND: {
+            error_explainer = "Invalid character found."; 
+            break;
+        }
+        case U_TRUNCATED_CHAR_FOUND: {
+            error_explainer = "Incomplete input sequence."; 
+            break;
+        }
+        case U_INVALID_TABLE_FORMAT: {
+            error_explainer = "Conversion table file found, but is corrupted."; 
+            break;
+        }
         // TODO: MF errors, but somewhere else with more robust error printing.
         // Can't be bothered with everything else right now:
-        default:
-            return "Unrecognized error code.";
+        default: {
+            error_explainer = "Unrecognized error code."; 
+            break;
+        }
     }
+    return vformat("%s (%d)", error_explainer, error);
 }
 
 void MessageFormatterBuilder::_bind_methods() {
@@ -64,7 +92,7 @@ void MessageFormatterBuilder::set_pattern(const PackedByteArray byte_pattern) {
 
 MessageFormatterBuilder::MessageFormatterBuilder() : inner(error) {
     if (error != U_ZERO_ERROR) {
-        print_error(vformat("Error creating MessageFormatter::Builder - %s (%i)", getError(error), error));
+        print_error(vformat("Error creating MessageFormatter::Builder - %s", getError(error)));
     }
 }
 
