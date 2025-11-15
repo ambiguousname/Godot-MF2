@@ -51,6 +51,18 @@ String getError(UErrorCode error) {
 			error_explainer = "Conversion table file found, but is corrupted."; 
 			break;
 		}
+		case U_MF_UNRESOLVED_VARIABLE_ERROR: {
+			error_explainer = "Could not find definition for variable.";
+			break;
+		}
+		case U_MF_SYNTAX_ERROR: {
+			error_explainer = "Syntax error.";
+			break;
+		}
+		case U_MF_UNKNOWN_FUNCTION_ERROR: {
+			error_explainer = "Unknown function.";
+			break;
+		}
 		// TODO: MF errors, but somewhere else with more robust error printing.
 		// Can't be bothered with everything else right now:
 		default: {
@@ -58,7 +70,7 @@ String getError(UErrorCode error) {
 			break;
 		}
 	}
-	return vformat("%s (%d)", error_explainer, error);
+	return vformat("%s (ICU Error Code %d)", error_explainer, error);
 }
 
 void MessageFormatterBuilder::_bind_methods() {
@@ -84,9 +96,9 @@ void MessageFormatterBuilder::set_pattern(const PackedByteArray byte_pattern) {
 	inner.setPattern(unicode_str, parse_error, error_code);
 
 	if (error_code != U_ZERO_ERROR) {
-		String pre_context = String(parse_error.preContext);
-		String post_context = String(parse_error.postContext);
-		print_error(vformat("Could not parse at line %d, offset %d : %s %d %s", parse_error.offset, parse_error.line, pre_context, error_code, post_context));
+		// String pre_context = String(parse_error.preContext);
+		// String post_context = String(parse_error.postContext);
+		print_error(vformat("Could not parse: \n%s\nAt line %d, offset %d: %s", byte_pattern.get_string_from_utf8(), parse_error.line, parse_error.offset, getError(error_code)));
 	}
 }
 
@@ -177,14 +189,14 @@ PackedByteArray MessageFormatter::format_to_string(Dictionary args) {
 	UErrorCode error_code = U_ZERO_ERROR;
 	icu::message2::MessageArguments m_args = icu::message2::MessageArguments(arg_map, error_code);
 	if (error_code != U_ZERO_ERROR) {
-		print_error(vformat("Could not create argument dictionary: %d", error_code));
+		print_error(vformat("Could not create argument dictionary: %s", getError(error_code)));
 		return PackedByteArray();
 	}
 
 	icu::UnicodeString str = inner->formatToString(m_args, error_code);
 
 	if (error_code != U_ZERO_ERROR) {
-		print_error(vformat("Could not format string: %d", error_code));
+		print_error(vformat("Could not format string: %s", getError(error_code)));
 		return PackedByteArray();
 	}
 
