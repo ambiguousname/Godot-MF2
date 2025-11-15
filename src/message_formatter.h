@@ -40,6 +40,7 @@ class MessageFormatterBuilder : public RefCounted {
 		icu::message2::MessageFormatter::Builder inner;
 
 		String pattern;
+		String locale;
 
 	public:
 		friend class MessageFormatter;
@@ -49,7 +50,10 @@ class MessageFormatterBuilder : public RefCounted {
 		void set_pattern(const String pattern);
 		String get_pattern() const;
 
+		// TODO: Replace with actual Locale wrapper (but also String setter function).
+		void set_locale(const String locale);
+		String get_locale() const;
+
 		MessageFormatter* build();
-		// TODO: Replace with actual Locale wrapper.
 		// void setLocale(const String language);
 };

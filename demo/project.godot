@@ -13,3 +13,7 @@ config_version=5
 config/name="godot cpp template"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://translations.en.translation", "res://translations.es.translation", "res://translations.ja.translation")

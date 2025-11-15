@@ -77,8 +77,11 @@ void MessageFormatterBuilder::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_pattern"), &MessageFormatterBuilder::set_pattern);
 	ClassDB::bind_method(D_METHOD("get_pattern"), &MessageFormatterBuilder::get_pattern);
 	ClassDB::bind_method(D_METHOD("build"), &MessageFormatterBuilder::build);
+	ClassDB::bind_method(D_METHOD("set_locale"), &MessageFormatterBuilder::set_locale);
+	ClassDB::bind_method(D_METHOD("get_locale"), &MessageFormatterBuilder::get_locale);
 
-	ADD_PROPERTY(PropertyInfo(godot::Variant::PACKED_BYTE_ARRAY, "pattern"), "set_pattern", "get_pattern");
+	ADD_PROPERTY(PropertyInfo(godot::Variant::STRING, "pattern"), "set_pattern", "get_pattern");
+	ADD_PROPERTY(PropertyInfo(godot::Variant::STRING, "locale"), "set_locale", "get_locale");
 }
 
 String MessageFormatterBuilder::get_pattern() const {
@@ -100,6 +103,20 @@ void MessageFormatterBuilder::set_pattern(const String string_pattern) {
 		// String post_context = String(parse_error.postContext);
 		print_error(vformat("Could not parse: \n%s\nAt line %d, offset %d: %s", string_pattern, parse_error.line, parse_error.offset, getError(error_code)));
 	}
+}
+
+String MessageFormatterBuilder::get_locale() const {
+	return locale;
+}
+
+void MessageFormatterBuilder::set_locale(const String str_locale) {
+	locale = str_locale;
+	PackedByteArray a = str_locale.to_utf8_buffer();
+	// TODO: Fix to be more robust.
+	icu::Locale icu_locale((const char*)a.ptr(), "", "");
+
+
+	inner.setLocale(icu_locale);
 }
 
 MessageFormatterBuilder::MessageFormatterBuilder() : inner(error) {
