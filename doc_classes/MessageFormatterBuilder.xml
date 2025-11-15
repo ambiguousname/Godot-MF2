@@ -4,15 +4,21 @@
 		Builder for the [MessageFormatter] class.
 	</brief_description>
 	<description>
-		Set the individual properties for a given MessageFormatter, before calling [method build].
+		Constructor for [MessageFormatter]. Set the individual properties for a given MessageFormatter, before calling [method build]. Bridge for [url=https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1message2_1_1MessageFormatter_1_1Builder.html]ICU4C's MessageFormatter::Builder[/url]
 	</description>
 	<tutorials>
 	</tutorials>
 	<methods>
+		<method name="build">
+			<return type="MessageFormatter"/>
+			<description>
+				Construct a new [MessageFormatter] from all the properties of this builder.
+			</description>
+		</method>
 	</methods>
 	<members>
 		<member name="pattern" type="PackedByteArray" setter="set_pattern" getter="get_pattern" default="PackedByteArray()">
-			UTF-8 array of the Message Format 2 pattern to use.
+			UTF-8 encoded array of the [url=https://messageformat.unicode.org/docs/reference/patterns/]Pattern[/url] to use.
 		</member>
 	</members>
 </class>

@@ -129,7 +129,7 @@ MessageFormatter* MessageFormatter::from_builder(MessageFormatterBuilder* builde
 }
 
 void MessageFormatter::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("format_to_string"), &MessageFormatter::format_to_string, "args_map");
+	ClassDB::bind_method(D_METHOD("format_to_string", "arg_map"), &MessageFormatter::format_to_string);
 }
 
 icu::message2::Formattable variant_to_formattable(Variant value) {

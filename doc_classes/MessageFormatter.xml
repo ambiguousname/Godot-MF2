@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="MessageFormatter" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/godotengine/godot/master/doc/class.xsd">
+	<brief_description>
+        A structure containing a message, to be formatted with according to its arguments.
+	</brief_description>
+	<description>
+        Structure for dynamically generating messages from a pattern based on provided arguments. Bridge for [url=https://unicode-org.github.io/icu-docs/apidoc/released/icu4c/classicu_1_1message2_1_1MessageFormatter.html]ICU4C's MessageFormatter[/url]
+	</description>
+	<tutorials>
+	</tutorials>
+	<methods>
+		<method name="format_to_string">
+			<return type="PackedByteArray"/>
+            <param index="0" name="arg_map" type="Dictionary"/>
+			<description>
+                Returns a formatted message in a UTF-8 encoded [PackedByteArray], according to [param arg_map]. Supports args of type [int], [float], and [String].
+			</description>
+		</method>
+	</methods>
+</class>
