@@ -119,6 +119,19 @@ void MessageFormatterBuilder::set_locale(const String str_locale) {
 	inner.setLocale(icu_locale);
 }
 
+void MessageFormatterBuilder::set_function_registry(const FunctionRegistry* p_registry) {
+	registry = p_registry;
+	if (registry->inner.has_value()) {
+		inner.setFunctionRegistry(registry->inner.value());
+	} else {
+		print_error("FunctionRegistry must be created with FunctionRegistryBuilder.build().");
+	}
+}
+
+const FunctionRegistry* MessageFormatterBuilder::get_function_registry() const {
+	return registry;
+}
+
 MessageFormatterBuilder::MessageFormatterBuilder() : inner(error) {
 	if (error > U_ZERO_ERROR) {
 		print_error(vformat("Error creating MessageFormatter::Builder - %s", getError(error)));

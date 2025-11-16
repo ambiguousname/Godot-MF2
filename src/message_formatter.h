@@ -1,6 +1,7 @@
 #pragma once
 
 #include "defs.h"
+#include "function_registry.h"
 
 #include "godot_cpp/classes/ref_counted.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
@@ -40,6 +41,7 @@ class MessageFormatterBuilder : public RefCounted {
 
 		String pattern;
 		String locale;
+		const FunctionRegistry* registry;
 
 	public:
 		friend class MessageFormatter;
@@ -52,6 +54,9 @@ class MessageFormatterBuilder : public RefCounted {
 		// TODO: Replace with actual Locale wrapper (but also String setter function).
 		void set_locale(const String locale);
 		String get_locale() const;
+
+		void set_function_registry(const FunctionRegistry* registry);
+		const FunctionRegistry* get_function_registry() const;
 
 		MessageFormatter* build();
 		// void setLocale(const String language);

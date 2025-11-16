@@ -24,12 +24,18 @@ class FunctionRegistryBuilder : public RefCounted {
         FunctionRegistry* build();
 };
 
+class MessageFormatterBuilder;
+
 class FunctionRegistry : public RefCounted {
     GDCLASS(FunctionRegistry, RefCounted)
 
     protected:
-        icu::message2::MFFunctionRegistry inner;
+        std::optional<icu::message2::MFFunctionRegistry> inner;
     public:
-        FunctionRegistry(icu::message2::MFFunctionRegistry&& registry);
+        static void _bind_methods();
+
+        friend class MessageFormatterBuilder;
+        friend class FunctionRegistryBuilder;
+        FunctionRegistry() = default;
         ~FunctionRegistry() override = default;
 };
