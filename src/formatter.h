@@ -10,16 +10,16 @@ using namespace godot;
 
 class Formatter;
 class FormatterFactory : public RefCounted, public icu::message2::FormatterFactory {
-    GDCLASS(FormatterFactory, RefCounted)
-    protected:
-    virtual icu::message2::Formatter* createFormatter(const icu::Locale& locale, UErrorCode& status) override;
+	GDCLASS(FormatterFactory, RefCounted)
+	protected:
+		virtual icu::message2::Formatter* createFormatter(const icu::Locale& locale, UErrorCode& status) override;
 
-    public:
-    // Formatter* create_formatter();
-    // static void _bind_methods();
+	public:
+		// Formatter* create_formatter();
+		// static void _bind_methods();
 };
 
 class Formatter : public RefCounted, public icu::message2::Formatter {
-    public:
-    // static void _bind_methods();
+	public:
+		// static void _bind_methods();
 };
