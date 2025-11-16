@@ -41,7 +41,7 @@ class MessageFormatterBuilder : public RefCounted {
 
 		String pattern;
 		String locale;
-		const FunctionRegistry* registry;
+		FunctionRegistry* registry;
 
 	public:
 		friend class MessageFormatter;
@@ -55,8 +55,8 @@ class MessageFormatterBuilder : public RefCounted {
 		void set_locale(const String locale);
 		String get_locale() const;
 
-		void set_function_registry(const FunctionRegistry* registry);
-		const FunctionRegistry* get_function_registry() const;
+		void set_function_registry(FunctionRegistry* registry);
+		FunctionRegistry* get_function_registry() const;
 
 		MessageFormatter* build();
 		// void setLocale(const String language);

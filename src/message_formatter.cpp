@@ -74,14 +74,19 @@ String getError(UErrorCode error) {
 }
 
 void MessageFormatterBuilder::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("build"), &MessageFormatterBuilder::build);
+
 	ClassDB::bind_method(D_METHOD("set_pattern"), &MessageFormatterBuilder::set_pattern);
 	ClassDB::bind_method(D_METHOD("get_pattern"), &MessageFormatterBuilder::get_pattern);
-	ClassDB::bind_method(D_METHOD("build"), &MessageFormatterBuilder::build);
+	ADD_PROPERTY(PropertyInfo(godot::Variant::STRING, "pattern"), "set_pattern", "get_pattern");
+
 	ClassDB::bind_method(D_METHOD("set_locale"), &MessageFormatterBuilder::set_locale);
 	ClassDB::bind_method(D_METHOD("get_locale"), &MessageFormatterBuilder::get_locale);
-
-	ADD_PROPERTY(PropertyInfo(godot::Variant::STRING, "pattern"), "set_pattern", "get_pattern");
 	ADD_PROPERTY(PropertyInfo(godot::Variant::STRING, "locale"), "set_locale", "get_locale");
+
+	ClassDB::bind_method(D_METHOD("set_function_registry"), &MessageFormatterBuilder::set_function_registry);
+	ClassDB::bind_method(D_METHOD("get_function_registry"), &MessageFormatterBuilder::get_function_registry);
+	ADD_PROPERTY(PropertyInfo(godot::Variant::OBJECT, "function_registry"), "set_function_registry", "get_function_registry");
 }
 
 String MessageFormatterBuilder::get_pattern() const {
@@ -119,7 +124,7 @@ void MessageFormatterBuilder::set_locale(const String str_locale) {
 	inner.setLocale(icu_locale);
 }
 
-void MessageFormatterBuilder::set_function_registry(const FunctionRegistry* p_registry) {
+void MessageFormatterBuilder::set_function_registry(FunctionRegistry* p_registry) {
 	registry = p_registry;
 	if (registry->inner.has_value()) {
 		inner.setFunctionRegistry(registry->inner.value());
@@ -128,7 +133,7 @@ void MessageFormatterBuilder::set_function_registry(const FunctionRegistry* p_re
 	}
 }
 
-const FunctionRegistry* MessageFormatterBuilder::get_function_registry() const {
+FunctionRegistry* MessageFormatterBuilder::get_function_registry() const {
 	return registry;
 }
 
