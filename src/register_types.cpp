@@ -7,6 +7,7 @@
 
 #include "message_formatter.h"
 #include "function_registry.h"
+#include "formatter.h"
 
 using namespace godot;
 
@@ -18,7 +19,8 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(MessageFormatter);
 	GDREGISTER_CLASS(MessageFormatterBuilder);
 	GDREGISTER_CLASS(FunctionRegistry);
-	GDREGISTER_CLASS(FunctionRegistryBuilder);
+	// GDREGISTER_CLASS(FunctionRegistryBuilder);
+	// GDREGISTER_ABSTRACT_CLASS(FormatterFactory);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {

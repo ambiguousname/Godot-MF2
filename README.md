@@ -9,3 +9,5 @@ Must have ICU4C 78+ installed.
 ```
 scons icu_dir=/path/to/icu4c_library_dir
 ```
+
+TODO: `memnew` safety.
