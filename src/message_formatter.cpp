@@ -167,6 +167,7 @@ MessageFormatter* MessageFormatter::from_builder(MessageFormatterBuilder* builde
 	icu::message2::MessageFormatter* formatter_ptr_v = (icu::message2::MessageFormatter*) malloc(sizeof(icu::message2::MessageFormatter));
 	*formatter_ptr_v = std::move(formatter);
 
+	// Safety: reference counting starts immediately when we return.
 	MessageFormatter* f = memnew(MessageFormatter);
 	f->inner = formatter_ptr_v;
 	return f;

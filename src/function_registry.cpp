@@ -11,6 +11,7 @@ void FunctionRegistryBuilder::_bind_methods() {
 FunctionRegistry* FunctionRegistryBuilder::build() {
     icu::message2::MFFunctionRegistry registry = inner.build();
 
+    // Safety: Reference counting starts immediately as soon as we return.
     FunctionRegistry* out = memnew(FunctionRegistry);
     out->inner = std::move(registry);
     return out;
