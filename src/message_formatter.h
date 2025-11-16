@@ -1,11 +1,10 @@
 #pragma once
 
+#include "defs.h"
+
 #include "godot_cpp/classes/ref_counted.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
 
-// MF2 defs:
-#define U_SHOW_CPLUSPLUS_API 1
-#define UCONFIG_NO_MF2 0
 #include <unicode/messageformat2.h>
 
 using namespace godot;
