@@ -9,6 +9,7 @@ func _ready() -> void:
 	
 	builder.pattern = tr("LOCALIZATION_TEST");
 	builder.locale = TranslationServer.get_locale();
+	builder.function_registry = registry;
 	var formatter := builder.build();
 	var res = formatter.format_to_string({
 		"name": "Username",

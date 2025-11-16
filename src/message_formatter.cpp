@@ -89,6 +89,12 @@ void MessageFormatterBuilder::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(godot::Variant::OBJECT, "function_registry"), "set_function_registry", "get_function_registry");
 }
 
+MessageFormatterBuilder::~MessageFormatterBuilder() {
+	if (registry != nullptr) {
+		registry->unreference();
+	}
+}
+
 String MessageFormatterBuilder::get_pattern() const {
 	return pattern;
 }
@@ -126,6 +132,8 @@ void MessageFormatterBuilder::set_locale(const String str_locale) {
 
 void MessageFormatterBuilder::set_function_registry(FunctionRegistry* p_registry) {
 	registry = p_registry;
+	// Safety: decremented by ~MessageFormatterBuilder:
+	registry->reference();
 	if (registry->inner.has_value()) {
 		inner.setFunctionRegistry(registry->inner.value());
 	} else {
@@ -154,7 +162,8 @@ MessageFormatter* MessageFormatter::from_builder(MessageFormatterBuilder* builde
 		print_error(vformat("Error building MessageFormatter - %d", error_code));
 		return nullptr;
 	}
-	// Stupid hack to allocate our MessageFormatter (since my compiler is complaining about the move assignment being a copy assignment?):
+	// Stupid hack to allocate our MessageFormatter (since my compiler is complaining about the move assignment being a copy assignment?).
+	// Safety: owned by MessageFormatter*, freed on ~MessageFormatter.
 	icu::message2::MessageFormatter* formatter_ptr_v = (icu::message2::MessageFormatter*) malloc(sizeof(icu::message2::MessageFormatter));
 	*formatter_ptr_v = std::move(formatter);
 

@@ -46,7 +46,7 @@ class MessageFormatterBuilder : public RefCounted {
 	public:
 		friend class MessageFormatter;
 		MessageFormatterBuilder();
-		~MessageFormatterBuilder() override = default;
+		~MessageFormatterBuilder();
 
 		void set_pattern(const String pattern);
 		String get_pattern() const;
