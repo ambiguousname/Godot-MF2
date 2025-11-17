@@ -1,6 +1,6 @@
 #pragma once
 
-#include "defs.h"
+#include "icu_util.h"
 #include "godot_cpp/classes/ref_counted.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
 
@@ -41,6 +41,8 @@ class FormatterFactory : public RefCounted, public icu::message2::FormatterFacto
 
 class Formatter : public RefCounted, public icu::message2::Formatter {
 	GDCLASS(Formatter, RefCounted)
+	protected:
+		icu::message2::FormattedPlaceholder format(icu::message2::FormattedPlaceholder&& toFormat, icu::message2::FunctionOptions&& options, UErrorCode& status) const override;
 	public:
 		OVERRIDE_ALLOC()
 
@@ -48,4 +50,6 @@ class Formatter : public RefCounted, public icu::message2::Formatter {
 		~Formatter() override = default;
 
 		static void _bind_methods();
+
+		virtual Variant format_input(Variant to_format, Dictionary options) const;
 };

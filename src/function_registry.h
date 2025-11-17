@@ -1,6 +1,6 @@
 #pragma once
 
-#include "defs.h"
+#include "icu_util.h"
 #include "godot_cpp/classes/ref_counted.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
 
