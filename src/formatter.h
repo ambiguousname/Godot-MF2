@@ -6,6 +6,8 @@
 
 #include <unicode/messageformat2_function_registry.h>
 
+#include "formatted_placeholder.h"
+
 using namespace godot;
 
 // UMemory (parent class of FormatterFactory) redefines void* operator new, so we re-re-define it again here (just copying godot-cpp's definitions).
@@ -51,5 +53,5 @@ class Formatter : public RefCounted, public icu::message2::Formatter {
 
 		static void _bind_methods();
 
-		virtual Variant format_input(Variant to_format, Dictionary options) const;
+		virtual String format_input(FormattedPlaceholder* to_format, Dictionary options) const;
 };

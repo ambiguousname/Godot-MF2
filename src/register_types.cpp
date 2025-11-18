@@ -23,6 +23,7 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(FunctionRegistryBuilder);
 	
 	GDREGISTER_VIRTUAL_CLASS(FormatterFactory);
+	GDREGISTER_VIRTUAL_CLASS(Formatter);
 
 	GDREGISTER_CLASS(FormattedPlaceholder);
 }

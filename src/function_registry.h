@@ -4,6 +4,8 @@
 #include "godot_cpp/classes/ref_counted.hpp"
 #include "godot_cpp/classes/wrapped.hpp"
 
+#include "formatter.h"
+
 #include <unicode/messageformat2_function_registry.h>
 
 using namespace godot;
@@ -22,6 +24,8 @@ class FunctionRegistryBuilder : public RefCounted {
 		~FunctionRegistryBuilder() override = default;
 
 		FunctionRegistry* build();
+
+		void adopt_formatter(String function_name, FormatterFactory* formatter_factory);
 };
 
 class MessageFormatterBuilder;

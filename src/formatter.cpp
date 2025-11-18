@@ -33,11 +33,8 @@ void FormatterFactory::_bind_methods() {
 }
 
 icu::message2::FormattedPlaceholder Formatter::format(icu::message2::FormattedPlaceholder&& toFormat, icu::message2::FunctionOptions&& options, UErrorCode& status) const {
-	Variant virtual_in = Variant(nullptr);
-	if (toFormat.canFormat()) {
-		icu::message2::Formattable formattable = toFormat.asFormattable();
-		virtual_in = formattable_to_variant(formattable);
-	}
+	FormattedPlaceholder* wrap = memnew(FormattedPlaceholder());
+	wrap->inner = std::move(toFormat);
 
 	Dictionary dict_options{};
 	icu::message2::FunctionOptionsMap options_map = options.getOptions();
@@ -48,14 +45,13 @@ icu::message2::FormattedPlaceholder Formatter::format(icu::message2::FormattedPl
 		dict_options[option_name] = option_value;
 	}
 
-	Variant out = format_input(virtual_in, dict_options);
-	icu::message2::Formattable formattable_out = variant_to_formattable(out);
-	// return icu::message2::FormattedPlaceholder(toFormat, std::move(options), formattable_out); 
-	return {};
+	String out = format_input(wrap, dict_options);
+
+	return icu::message2::FormattedPlaceholder(toFormat, std::move(options), icu::message2::FormattedValue(STRING_TO_UNICODE(out)));
 }
 
-Variant Formatter::format_input(Variant to_format, Dictionary options) const {
-	return to_format;
+String Formatter::format_input(FormattedPlaceholder* to_format, Dictionary options) const {
+	return "";
 }
 
 void Formatter::_bind_methods() {

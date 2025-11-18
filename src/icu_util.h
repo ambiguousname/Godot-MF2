@@ -12,3 +12,5 @@
 godot::Variant formattable_to_variant(icu::message2::Formattable formattable);
 
 icu::message2::Formattable variant_to_formattable(godot::Variant value);
+
+godot::String getError(UErrorCode error);
