@@ -50,9 +50,8 @@ icu::message2::FormattedPlaceholder Formatter::format(icu::message2::FormattedPl
 
 	Variant out = format_input(virtual_in, dict_options);
 	icu::message2::Formattable formattable_out = variant_to_formattable(out);
+	// return icu::message2::FormattedPlaceholder(toFormat, std::move(options), formattable_out); 
 	return {};
-	// TODO:
-	// return icu::message2::FormattedPlaceholder(std::move(toFormat), std::move(options), formattable_out); 
 }
 
 Variant Formatter::format_input(Variant to_format, Dictionary options) const {

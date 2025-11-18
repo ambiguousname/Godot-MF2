@@ -8,6 +8,7 @@
 #include "message_formatter.h"
 #include "function_registry.h"
 #include "formatter.h"
+#include "formatted_placeholder.h"
 
 using namespace godot;
 
@@ -22,6 +23,8 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(FunctionRegistryBuilder);
 	
 	GDREGISTER_VIRTUAL_CLASS(FormatterFactory);
+
+	GDREGISTER_CLASS(FormattedPlaceholder);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {
